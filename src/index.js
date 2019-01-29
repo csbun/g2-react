@@ -1,5 +1,6 @@
 import G2 from 'g2';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 let uniqueId = 0;
 function generateUniqueId() {
@@ -8,6 +9,18 @@ function generateUniqueId() {
 
 export default function createG2(__operation) {
   class Component extends React.Component {
+
+    static propTypes = {
+      data: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.object),
+        PropTypes.instanceOf(G2.Frame),
+      ]).isRequired,
+      width: PropTypes.number.isRequired,
+      height: PropTypes.number.isRequired,
+      plotCfg: PropTypes.object,
+      forceFit: PropTypes.bool,
+      configs: PropTypes.object,
+    };
 
     constructor(props, context) {
       super(props, context);
@@ -20,12 +33,8 @@ export default function createG2(__operation) {
     }
 
     componentWillReceiveProps(newProps) {
-      const { data: newData, width: newWidth, height: newHeight, plotCfg: newPlotCfg } = newProps;
-      const { data: oldData, width: oldWidth, height: oldHeight, plotCfg: oldPlotCfg } = this.props;
-
-      if (newPlotCfg !== oldPlotCfg) {
-        console.warn('plotCfg 不支持修改');
-      }
+      const { data: newData, width: newWidth, height: newHeight } = newProps;
+      const { data: oldData, width: oldWidth, height: oldHeight } = this.props;
 
       if (newData !== oldData) {
         this.chart.changeData(newData);
@@ -46,7 +55,7 @@ export default function createG2(__operation) {
     }
 
     initChart(props) {
-      const { width, height, data, plotCfg, forceFit } = props;
+      const { width, height, data, plotCfg, forceFit, configs } = props;
       const chart = new G2.Chart({
         id: this.chartId,
         width, height,
@@ -54,7 +63,7 @@ export default function createG2(__operation) {
         forceFit,
       });
       chart.source(data);
-      __operation(chart);
+      __operation(chart, configs);
       this.chart = chart;
     }
 
@@ -62,14 +71,6 @@ export default function createG2(__operation) {
       return (<div id={this.chartId} />);
     }
   }
-
-  Component.propTypes = {
-    data: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-    width: React.PropTypes.number.isRequired,
-    height: React.PropTypes.number.isRequired,
-    plotCfg: React.PropTypes.object,
-    forceFit: React.PropTypes.bool,
-  };
 
   return Component;
 }

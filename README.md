@@ -50,7 +50,7 @@ React.render(
   />
 );
 ```
-
+Note that you can make a dynamic props wrap just like [higherWrapper demo](https://github.com/antvis/g2-react/blob/master/examples/higherWrapper.md)
 
 ## Props
 
@@ -95,6 +95,12 @@ See detail api of [g2](http://g2.alipay.com/api/)
       <td>bool</td>
       <td>false</td>
       <td>if the width of chart autoFit with parent</td>
+    </tr>
+     <tr>
+      <td>configs</td>
+      <td>any</td>
+      <td></td>
+      <td>as arguments of createG2((chart, configs))</td>
     </tr>
   </tbody>
 </table>
